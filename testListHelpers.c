@@ -141,14 +141,69 @@ s_node * list_create() {
 /* -----------------------------------------------------------------
    Création d'une nouvelle liste vide
    -----------------------------------------------------------------
-   node : Une node
+   node : un
+   data : une valeur random
    -----------------------------------------------------------------
-   retourne rien ( modifie uniquement le head)
+   retourne un pointeur d'une node avec sa valeur modifié avec data
    -----------------------------------------------------------------
 */
 s_node * list_insert(s_node * head, void * data) {
+
+	if (head == NULL) {
+
+
+		head = malloc(s_node);
+
+	}
+
 	head->donnee = data;
 	head->next = NULL;
 
 	return head;
+}
+
+
+/* -----------------------------------------------------------------
+   Création d'une nouvelle liste vide
+   -----------------------------------------------------------------
+   * node : pointeur d'une node
+   -----------------------------------------------------------------
+   retourne un pointeur vers la prochaine node
+   -----------------------------------------------------------------
+*/
+s_node * list_next(s_node* head) {
+	return head->next;
+}
+
+
+
+
+s_node * list_append(s_node * head, void * data) {
+	
+	if(head->next == NULL) {
+		head->next->donnee = data;
+		head->next->next = NULL;
+
+		return head;
+	}
+
+	s_node * next = head->next;
+
+	while(next->next != NULL) {
+		next = head->next;
+	}
+
+	next->next->donnee = data;
+	next->next->next = NULL;
+
+	return next;
+}
+
+
+
+s_node * list_orderedApprend(s_node * head, int (*compare)(s_node *, void *), void *param){}
+
+
+void list_set_data(s_node * node, void * data) {
+	node->donnee = data;
 }
