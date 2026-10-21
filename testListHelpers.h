@@ -117,6 +117,11 @@ s_node * list_next(s_node * head);
 */
 s_node * list_insert(s_node * head, void * data);
 
+s_node * list_next(s_node * head);
+
+void * list_get_data(s_node * node);
+
+
 /* -----------------------------------------------------------------
    Création et ajout d'un nouveau nœud en queue de liste
    -----------------------------------------------------------------
