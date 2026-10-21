@@ -152,3 +152,47 @@ s_node * list_insert(s_node * head, void * data) {
 
 	return head;
 }
+
+ 
+s_node * list_next(s_node * head) {
+	head->next;
+}
+
+s_node * list_remove(s_node * head, void * data) {
+	s_node * headIfNotFoundData = head;
+	s_node * nodeActuelle=head;
+	while (nodeActuelle->donnee != data || nodeActuelle->next == NULL) {
+		s_node * pastNode=nodeActuelle;
+		nodeActuelle=nodeActuelle->next;
+	}
+
+	if (nodeActuelle->donnee==data) {
+		return list_HeadRemove(nodeActuelle);
+	}
+	return headIfNotFoundData;
+
+
+}
+s_node * list_headRemove(s_node * head) {
+	head = head->next;
+	return head;
+}
+
+void * list_get_data(s_node * node){
+	return node->donnee;
+}
+
+s_node * list_remove(s_node * head, void * data) {
+	s_node * nodeActuelle=head;
+	s_node * pastNode;
+	if (head->donnee==data) return list_headRemove(head);
+	while (nodeActuelle->donnee != data || nodeActuelle->next != NULL) {
+		pastNode=nodeActuelle;
+		nodeActuelle=nodeActuelle->next;
+	}
+
+	if (nodeActuelle->donnee==data) {
+		pastNode->next=headlist_HeadRemove(nodeActuelle);
+	}
+	return head;
+}

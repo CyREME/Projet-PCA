@@ -131,3 +131,7 @@ void * list_set_data(void s_node * node);
    -----------------------------------------------------------------
 */
 s_node * list_insert(s_node * head, void * data);
+
+s_node * list_next(s_node * head);
+
+void * list_get_data(s_node * node);
