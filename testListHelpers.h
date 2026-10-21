@@ -130,4 +130,4 @@ void * list_set_data(void s_node * node);
    retourne un ointeur vers une donnée
    -----------------------------------------------------------------
 */
-void * list_insert(s_node * head, void * data);
+s_node * list_insert(s_node * head, void * data);
