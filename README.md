@@ -1,3 +1,10 @@
 # Projet-PCA
 
-##Objectif
+## Objectif
+
+## Faire en prio
+
+2 fichiers :
+
+- list.c
+- list.h

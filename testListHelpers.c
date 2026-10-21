@@ -196,6 +196,8 @@ s_node * list_append(s_node * head, void * data) {
 	next->next->donnee = data;
 	next->next->next = NULL;
 
+	head->next =
+
 	return next;
 }
 
