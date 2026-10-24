@@ -20,7 +20,8 @@ Ce module gère une liste de nœuds contenant des pointeurs génériques (`void 
 - [ ] **`list_destroy`** : Écrire la libération complète des nœuds de la liste.
 
 ### ✅ Déjà Réalisé / Validé (Testé)
-- [x] 
+- [x] **`list_create`**
+- [x] **`list_insert`**
 
 ---
 

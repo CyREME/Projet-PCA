@@ -2,7 +2,7 @@
 EXEC = test_list
 
 # Fichiers sources et objets
-SRC = list.c test_list.c
+SRC = list.c testList.c
 OBJ = $(SRC:.c=.o)
 
 # Règle par défaut (compilation de l'exécutable)

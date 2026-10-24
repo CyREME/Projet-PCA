@@ -48,6 +48,27 @@ int main(void) {
     assert(list_headRemove(l1) == NULL);
     assert(list_remove(l1, NULL) == NULL);
 
-    printf("✅ Tous les tests de list_create() ont réussi avec succès !\n");
+
+
+    // tests list_insert
+    /* -----------------------------------------------------------------
+       TEST 1 : Insertion d'un élément dans une liste vide
+       S'assurer que l'insertion dans une liste vide retourne une nouvelle tête non NULL.
+      ----------------------------------------------------------------- */
+      assert(list_insert(l1, (void *)42) != NULL);
+      assert(list_insert(l1, (void *)42)->donnee == (void *)42);
+      l1 = list_insert(l1, (void *)42); // Mettre à jour l1 pour refléter la nouvelle tête
+   
+   /* -----------------------------------------------------------------
+      TEST 2 : Insertion d'un élément dans une liste non vide
+      Vérifier que l'insertion d'un nouvel élément dans une liste existante
+      met correctement à jour la tête de liste et que l'élément est bien inséré
+      ----------------------------------------------------------------- */
+      assert(list_insert(l1, (void *)43) != NULL);
+      assert(list_insert(l1, (void *)43)->donnee == (void *)43);
+      assert(list_insert(l1, (void *)43)->next->donnee == (void *)42);
+
+
+
     return 0;
 }
