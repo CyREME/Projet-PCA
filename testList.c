@@ -5,70 +5,134 @@
 #include "list.h"
 
 int main(void) {
+    
+    /* =================================================================
+       SECTION 1 : TESTS DE list_create()
+       ================================================================= */
+    {
+        s_node * l1 = list_create();
+        assert(l1 == NULL);
 
-    // Tests pout list_create
-    /* -----------------------------------------------------------------
-       TEST 1 : Vérification de la valeur de retour brute
-       Une liste créée doit retourner strictement un pointeur NULL.
-       ----------------------------------------------------------------- */
-    s_node * l1 = list_create();
-    assert(l1 == NULL);
+        assert(check_list_state(l1, node_int_to_string, "null") == 1);
 
-    /* -----------------------------------------------------------------
-       TEST 2 : Vérification du comportement avec list_to_string
-       La représentation textuelle d'une liste vide doit être "null".
-       ----------------------------------------------------------------- */
-    char * str_representation = list_to_string(l1, node_int_to_string);
-    assert(str_representation != NULL);
-    assert(strcmp(str_representation, "null") == 0);
+        assert(list_headRemove(l1) == NULL);
+        assert(list_remove(l1, NULL) == NULL);
+    }
 
-    /* -----------------------------------------------------------------
-       TEST 3 : Utilisation du helper check_list_state
-       Vérification directe que l'état correspond exactement à "null".
-       ----------------------------------------------------------------- */
-    int is_valid_state = check_list_state(l1, node_int_to_string, "null");
-    assert(is_valid_state == 1);
+    /* =================================================================
+       SECTION 2 : TESTS DE list_insert()
+       ================================================================= */
+    {
+        s_node * l1 = list_create();
 
-    /* -----------------------------------------------------------------
-       TEST 4 : Créations multiples et indépendance
-       Vérifier qu'appeler list_create() plusieurs fois de suite
-       produit toujours des listes vides sans effets de bord.
-       ----------------------------------------------------------------- */
-    s_node * l2 = list_create();
-    s_node * l3 = list_create();
-    assert(l2 == NULL);
-    assert(l3 == NULL);
-    assert(l1 == l2 && l2 == l3); // Toutes pointent de manière cohérente vers NULL
+        int val1 = 42;
+        l1 = list_insert(l1, &val1);
+        assert(l1 != NULL);
+        assert(list_get_data(l1) == &val1);
+        assert(list_next(l1) == NULL);
+        assert(check_list_state(l1, node_int_to_string, "42 -> null") == 1);
 
-    /* -----------------------------------------------------------------
-       TEST 5 : Comportement des fonctions de suppression sur liste vide
-       Sur une liste vide, les fonctions de suppression doivent être sûres
-       et retourner NULL sans planter.
-       ----------------------------------------------------------------- */
-    assert(list_headRemove(l1) == NULL);
-    assert(list_remove(l1, NULL) == NULL);
+        int val2 = 43;
+        l1 = list_insert(l1, &val2);
+        assert(list_get_data(l1) == &val2);
+        assert(list_next(l1) != NULL);
+        assert(list_get_data(list_next(l1)) == &val1);
+        assert(check_list_state(l1, node_int_to_string, "43 -> 42 -> null") == 1);
 
+        int val3 = 42;
+        l1 = list_insert(l1, &val3);
+        assert(check_list_state(l1, node_int_to_string, "42 -> 43 -> 42 -> null") == 1);
 
+        s_node * l_null_test = list_create();
+        l_null_test = list_insert(l_null_test, NULL);
+        assert(l_null_test != NULL);
+        assert(list_get_data(l_null_test) == NULL);
+        free(l_null_test);
+    }
 
-    // tests list_insert
-    /* -----------------------------------------------------------------
-       TEST 1 : Insertion d'un élément dans une liste vide
-       S'assurer que l'insertion dans une liste vide retourne une nouvelle tête non NULL.
-      ----------------------------------------------------------------- */
-      assert(list_insert(l1, (void *)42) != NULL);
-      assert(list_insert(l1, (void *)42)->donnee == (void *)42);
-      l1 = list_insert(l1, (void *)42); // Mettre à jour l1 pour refléter la nouvelle tête
-   
-   /* -----------------------------------------------------------------
-      TEST 2 : Insertion d'un élément dans une liste non vide
-      Vérifier que l'insertion d'un nouvel élément dans une liste existante
-      met correctement à jour la tête de liste et que l'élément est bien inséré
-      ----------------------------------------------------------------- */
-      assert(list_insert(l1, (void *)43) != NULL);
-      assert(list_insert(l1, (void *)43)->donnee == (void *)43);
-      assert(list_insert(l1, (void *)43)->next->donnee == (void *)42);
+    /* =================================================================
+       SECTION 3 : TESTS DE list_append()
+       ================================================================= */
+    {
+        s_node * list = list_create();
+        int val1 = 10;
+        
+        s_node * new_head = list_append(list, &val1);
+        assert(new_head != NULL);
+        assert(list_get_data(new_head) == &val1);
+        assert(list_next(new_head) == NULL);
+        assert(check_list_state(new_head, node_int_to_string, "10 -> null") == 1);
 
+        int val2 = 20;
+        int val3 = 30;
 
+        s_node * ret_head = list_append(new_head, &val2);
+        assert(ret_head == new_head);
+        assert(check_list_state(new_head, node_int_to_string, "10 -> 20 -> null") == 1);
+
+        ret_head = list_append(new_head, &val3);
+        assert(ret_head == new_head);
+        assert(check_list_state(new_head, node_int_to_string, "10 -> 20 -> 30 -> null") == 1);
+
+        int val_doublon = 10;
+        list_append(new_head, &val_doublon);
+        assert(check_list_state(new_head, node_int_to_string, "10 -> 20 -> 30 -> 10 -> null") == 1);
+
+        int val_tete = 5;
+        new_head = list_insert(new_head, &val_tete);
+        assert(check_list_state(new_head, node_int_to_string, "5 -> 10 -> 20 -> 30 -> 10 -> null") == 1);
+
+        int val_queue = 99;
+        new_head = list_append(new_head, &val_queue);
+        assert(check_list_state(new_head, node_int_to_string, "5 -> 10 -> 20 -> 30 -> 10 -> 99 -> null") == 1);
+    }
+
+    /* =================================================================
+       SECTION 4 : TESTS DE list_set_data()
+       ================================================================= */
+    {
+        int val_initiale = 100;
+        s_node * list = list_create();
+        list = list_insert(list, &val_initiale);
+
+        assert(list_get_data(list) == &val_initiale);
+        assert(check_list_state(list, node_int_to_string, "100 -> null") == 1);
+
+        int val_nouvelle = 200;
+        list_set_data(list, &val_nouvelle);
+
+        assert(list_get_data(list) == &val_nouvelle);
+        assert(check_list_state(list, node_int_to_string, "200 -> null") == 1);
+
+        int v1 = 1, v2 = 2, v3 = 3;
+        s_node * multi_list = list_create();
+        multi_list = list_append(multi_list, &v1);
+        multi_list = list_append(multi_list, &v2);
+        multi_list = list_append(multi_list, &v3);
+
+        int new_v1 = 10;
+        list_set_data(multi_list, &new_v1);
+        assert(check_list_state(multi_list, node_int_to_string, "10 -> 2 -> 3 -> null") == 1);
+
+        s_node * node_milieu = list_next(multi_list);
+        int new_v2 = 20;
+        list_set_data(node_milieu, &new_v2);
+        assert(check_list_state(multi_list, node_int_to_string, "10 -> 20 -> 3 -> null") == 1);
+
+        s_node * node_queue = list_next(node_milieu);
+        int new_v3 = 30;
+        list_set_data(node_queue, &new_v3);
+        assert(check_list_state(multi_list, node_int_to_string, "10 -> 20 -> 30 -> null") == 1);
+
+        list_set_data(node_milieu, NULL);
+        assert(list_get_data(node_milieu) == NULL);
+
+        int val_a = 500, val_b = 600;
+        list_set_data(list, &val_a);
+        assert(list_get_data(list) == &val_a);
+        list_set_data(list, &val_b);
+        assert(list_get_data(list) == &val_b);
+    }
 
     return 0;
 }

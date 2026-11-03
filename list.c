@@ -164,35 +164,18 @@ s_node * list_next(s_node * head) {
    -----------------------------------------------------------------
 */
 s_node * list_insert(s_node * head, void * data) {
+    s_node * new_head = malloc(sizeof(s_node));
+    if (new_head == NULL) return NULL;
 
     if (head == NULL) {
-        s_node * new_head = malloc(sizeof(s_node));
-        if (new_head == NULL) return NULL;
-
-        new_head->donnee = malloc(sizeof(typeof(data)));
-
-        if (new_head->donnee == NULL) {
-            free(new_head);
-            return NULL;
-        }
-
         new_head->donnee = data;
         new_head->next = NULL;
         return new_head;
     }
 
-    
-
     s_node * new_node = malloc(sizeof(s_node));
     
     if (new_node == NULL) return head;
-    
-    new_node->donnee = malloc(sizeof(typeof(data)));
-
-    if (new_node->donnee == NULL) {
-        free(new_node);
-        return head;
-    }
 
     new_node->donnee = data;
     new_node->next = head;
