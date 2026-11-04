@@ -131,6 +131,7 @@ s_node * list_create(void) {
    -----------------------------------------------------------------
 */
 void * list_get_data(s_node * node) {
+    if (node == NULL) return node;
     return node->donnee;
 }
 
@@ -142,6 +143,7 @@ void * list_get_data(s_node * node) {
    -----------------------------------------------------------------
 */
 void list_set_data(s_node * node, void * data) {
+    if (node == NULL) return node;
     node->donnee = data;
 }
 
@@ -154,6 +156,7 @@ void list_set_data(s_node * node, void * data) {
    -----------------------------------------------------------------
 */
 s_node * list_next(s_node * head) {
+    if (head == NULL) return head;
     return head->next;
 }
 
@@ -167,15 +170,6 @@ s_node * list_next(s_node * head) {
    -----------------------------------------------------------------
 */
 s_node * list_insert(s_node * head, void * data) {
-    s_node * new_head = malloc(sizeof(s_node));
-    if (new_head == NULL) return NULL;
-
-    if (head == NULL) {
-        new_head->donnee = data;
-        new_head->next = NULL;
-        return new_head;
-    }
-
     s_node * new_node = malloc(sizeof(s_node));
     
     if (new_node == NULL) return head;
@@ -324,7 +318,6 @@ int compare_int_node(s_node * node, void * param) {
 
 
 /**/
-
 void list_destroy(s_node * head) {
     while(head != NULL) {
         s_node * next = head->next;
