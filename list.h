@@ -172,4 +172,8 @@ s_node * list_orderedAppend(s_node ** head,
 */
 void list_destroy(s_node * head);
 
+int compare_int_node(s_node * node, void * param);
+
+int compare_string_node(s_node * node, void * param);
+
 #endif
