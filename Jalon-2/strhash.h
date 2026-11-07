@@ -8,22 +8,12 @@
 */
 
 
-#ifndef TEST_HASH_HELPERS_H
-#define TEST_HASH_HELPERS_H
+#ifndef STRHASH_H
+#define STRHASH_H
 
-
-/* ---------------------------------------------------------
-   Structure d'un nœud de la liste
-   ---------------------------------------------------------
-*/
-struct _list_node {
-    void * donnee;
-    struct _list_node * next;
-};
-
-typedef struct _list_node s_node;
-
-
+#include <math.h>
+#include <stdio.h>
+#include "list.h"
 
 /* ---------------------------------------------------------
    Structure d'une table de hachage
@@ -31,7 +21,7 @@ typedef struct _list_node s_node;
 */
 
 typedef struct {
-  int size;
+   int size;
   s_node ** adresses;
 } table_hash;
 
@@ -40,7 +30,7 @@ typedef struct {
 table_hash * createTableHash(int size);
 
 /*Destruction d'une table*/
-int freeTab(table_hash * tab);
+int freeTable(table_hash * tab);
 
 /*Libération donnée table*/
 int freeData(table_hash * tab);
@@ -54,11 +44,12 @@ int tableDeleteWord(table_hash * tab, char * mot);
 /*Affichage stat table*/
 void printStatTable(table_hash * tab);
 
+int calculCle(table_hash * tab, char * mot);
 
+void minMaxTotElNode(table_hash * tab, int * min, int * max, int * tot);
 
+float ecartType(table_hash * tab, float moyenne);
 
-
-
-
+int nbElAdresses ( s_node * node);
 
 #endif

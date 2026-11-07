@@ -143,7 +143,6 @@ void * list_get_data(s_node * node) {
    -----------------------------------------------------------------
 */
 void list_set_data(s_node * node, void * data) {
-    if (node == NULL) return node;
     node->donnee = data;
 }
 
@@ -314,6 +313,24 @@ int compare_int_node(s_node * node, void * param) {
     int valeur_nouvelle = *(int *)param;
     
     return valeur_actuel - valeur_nouvelle;
+}
+
+/* -----------------------------------------------------------------
+   Compare la valeur entière d'un nœud avec une donnée cible
+   -----------------------------------------------------------------
+   node  : pointeur sur le nœud contenant un entier (int *)
+   param : pointeur vers la chaine de charactères à comparer (char *)
+   -----------------------------------------------------------------
+   retourne : < 0 si le nœud est plus petit que param,
+                0 si les données sont égales,
+              > 0 si le nœud est plus grand que param
+   -----------------------------------------------------------------
+*/
+int compare_string_node(s_node * node, void * param) {
+    char * chaine_actuel = (char *)list_get_data(node);
+    char * chaine_nouvelle = (char *)param;
+    
+    return strcmp(chaine_actuel, chaine_nouvelle);
 }
 
 
