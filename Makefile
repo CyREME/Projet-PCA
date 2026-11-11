@@ -1,23 +1,29 @@
-# Nom de l'exécutable final
-EXEC = test_list
+# Options de compilation
+CC = gcc
+CFLAGS = -Wall -Wextra -g -IJalon-1 -IJalon-2
+LDFLAGS = -lm
 
-# Fichiers sources et objets
-SRC = list.c test_list.c
-OBJ = $(SRC:.c=.o)
+# Nom des exécutables
+EXEC_J1 = test_list
+EXEC_J2 = test_hash
 
-# Règle par défaut (compilation de l'exécutable)
-all: $(EXEC)
+# Règle par défaut : compile tout
+all: $(EXEC_J1) $(EXEC_J2)
 
-# Création de l'exécutable à partir des fichiers objets
-$(EXEC): $(OBJ)
+# --- Exécutable Jalon 1 ---
+$(EXEC_J1): Jalon-1/list.o Jalon-1/testList.o
 	$(CC) $(CFLAGS) -o $@ $^
 
-# Compilation de chaque fichier .c en fichier .o
-%.o: %.c list.h
+# --- Exécutable Jalon 2 ---
+$(EXEC_J2): Jalon-1/list.o Jalon-2/strhash.o Jalon-2/testHash.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Règle de compilation des fichiers .c en .o
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Nettoyage des fichiers générés
+# Nettoyage des fichiers objets et des exécutables
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -f Jalon-1/*.o Jalon-2/*.o $(EXEC_J1) $(EXEC_J2)
 
 .PHONY: all clean

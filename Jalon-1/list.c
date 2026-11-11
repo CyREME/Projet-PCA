@@ -1,4 +1,7 @@
-/* ---------------------------------------------------------
+/* 
+   ---------------------------------------------------------
+   LACROIX & CELLIER
+   ---------------------------------------------------------
    Test unitaire du module liste - Fonctions utilitaires
    ---------------------------------------------------------
    20/10/21 SR creation
@@ -128,6 +131,7 @@ s_node * list_create(void) {
    -----------------------------------------------------------------
 */
 void * list_get_data(s_node * node) {
+    if (node == NULL) return node;
     return node->donnee;
 }
 
@@ -151,6 +155,7 @@ void list_set_data(s_node * node, void * data) {
    -----------------------------------------------------------------
 */
 s_node * list_next(s_node * head) {
+    if (head == NULL) return head;
     return head->next;
 }
 
@@ -165,6 +170,7 @@ s_node * list_next(s_node * head) {
 */
 s_node * list_insert(s_node * head, void * data) {
     s_node * new_node = malloc(sizeof(s_node));
+    
     if (new_node == NULL) return head;
 
     new_node->donnee = data;
@@ -258,7 +264,81 @@ s_node * list_remove(s_node * head, void * data) {
    retourne : la tête de liste mise à jour
    -----------------------------------------------------------------
 */
-s_node * list_orderedAppend(s_node * head, int (*compare)(s_node *, void *), void * param) {
-    /* À implémenter */
-    return head;
+
+
+s_node * list_orderedAppend(s_node ** head, int (*compare)(s_node *, void *), void * param) {
+    // 1. Liste vide OU param plus petit que la tête -> Nouvelle tête !
+    if (*head == NULL || compare(*head, param) > 0) {
+        *head = list_insert(*head, param);
+        return *head;
+    }
+
+    // 2. Doublon dès la tête -> On ne fait rien
+    if (compare(*head, param) == 0) {
+        return *head;
+    }
+
+    // 3. Parcours : on avance tant que le SUIVANT est plus petit
+    s_node * current = *head;
+    while (current->next != NULL && compare(current->next, param) < 0) {
+        current = current->next;
+    }
+
+    // 4. Si le suivant est un doublon, on annule
+    if (current->next != NULL && compare(current->next, param) == 0) {
+        return *head;
+    }
+
+    // 5. Insertion au bon endroit (au milieu ou en queue)
+    current->next = list_insert(current->next, param);
+
+    return *head;
+}
+
+
+
+/* -----------------------------------------------------------------
+   Compare la valeur entière d'un nœud avec une donnée cible
+   -----------------------------------------------------------------
+   node  : pointeur sur le nœud contenant un entier (int *)
+   param : pointeur vers l'entier à comparer (int *)
+   -----------------------------------------------------------------
+   retourne : < 0 si le nœud est plus petit que param,
+                0 si les données sont égales,
+              > 0 si le nœud est plus grand que param
+   -----------------------------------------------------------------
+*/
+int compare_int_node(s_node * node, void * param) {
+    int valeur_actuel = *(int *)list_get_data(node);
+    int valeur_nouvelle = *(int *)param;
+    
+    return valeur_actuel - valeur_nouvelle;
+}
+
+/* -----------------------------------------------------------------
+   Compare la valeur entière d'un nœud avec une donnée cible
+   -----------------------------------------------------------------
+   node  : pointeur sur le nœud contenant un entier (int *)
+   param : pointeur vers la chaine de charactères à comparer (char *)
+   -----------------------------------------------------------------
+   retourne : < 0 si le nœud est plus petit que param,
+                0 si les données sont égales,
+              > 0 si le nœud est plus grand que param
+   -----------------------------------------------------------------
+*/
+int compare_string_node(s_node * node, void * param) {
+    char * chaine_actuel = (char *)list_get_data(node);
+    char * chaine_nouvelle = (char *)param;
+    
+    return strcmp(chaine_actuel, chaine_nouvelle);
+}
+
+
+/**/
+void list_destroy(s_node * head) {
+    while(head != NULL) {
+        s_node * next = head->next;
+        free(head);
+        head = next;
+    }
 }
