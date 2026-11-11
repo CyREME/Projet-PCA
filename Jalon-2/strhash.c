@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 /*Creation d'une table*/
 table_hash * createTableHash(int size){
     if (size<0) return NULL;
