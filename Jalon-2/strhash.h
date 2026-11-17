@@ -52,4 +52,6 @@ float ecartType(table_hash * tab, float moyenne);
 
 int nbElAdresses ( s_node * node);
 
+char * tableGetWord(table_hash * tab, char * mot);
+
 #endif

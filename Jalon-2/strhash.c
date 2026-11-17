@@ -23,7 +23,6 @@ table_hash * createTableHash(int size){
     for(int i=0;i<tab->size;i++) {
         tab->adresses[i] = list_create();
     }
-   
 
     return tab;
 
@@ -161,4 +160,14 @@ float ecartType(table_hash * tab, float moyenne) {
     }
     float variation = sumSquaredDeviations / tab->size;
     return sqrt(variation);
+}
+
+char * tableGetWord(table_hash * tab, char * mot) {
+    int cle = calculCle(tab, mot);
+    s_node * current = tab->adresses[cle];
+    while(current!=NULL) {
+        if (strcmp((char *)current->donnee, mot) == 0) return (char *)current->donnee;
+        current = list_next(current);
+    }
+    return NULL;
 }

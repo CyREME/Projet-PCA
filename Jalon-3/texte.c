@@ -15,6 +15,7 @@ token * creation_token(int type, int textOffset, char * str) {
         // On passe un pointeur vers le mot dans la table de Hashage dans word
         t->data.word = str;
     } else if(t->type == SHORT_SPACE) {
+        
 
         // Ajout de chaque caractère présent dans la chaine vers le délimiteur < 4
         int i = 0;
@@ -36,37 +37,58 @@ token * creation_token(int type, int textOffset, char * str) {
 }
 
 
-int textToToken(table_hash * tableHash, char * buffer) {
+int textToToken(table_hash * tableHash, texte * txt, char * buffer) {
 
     int c=0;
-    while (buffer[c] != '/0') {
-        char * word = malloc(sizeof(char)); // Mot a insérer dans la table, et dans un token.
+    while (buffer[c] != '\0') {
+        char tempWord[512]; // Mot a insérer dans la table, et dans un token.
         int wordC=0; // Taille du mot
         int nbDelimiteur=0;
-        while ((buffer[c] != '\n' && buffer[c] != ' ' && c != '\t') && buffer[c] != EOF) {
-            word[wordC++]=buffer[c++];
+        while (buffer[c] != '\n' && buffer[c] != ' ' && buffer[c] != '\t' && buffer[c] != '\0') {
+            tempWord[wordC++]=buffer[c++];
+        }
+
+        if(wordC > 0) {
+            
+            char * word = malloc((wordC + 1) * sizeof(char));
+            
+            for (int i = 0; i < wordC; i++){
+                word[i]=tempWord[i];
+            }
+            
+            word[wordC] = '\0';
+            
+            tableAppendWord(tableHash, word);
+            char * new_word = tableGetWord(tableHash, word);
+            token * tk = creation_token(WORD, c-wordC, new_word);
+            addTokken(txt, tk);
+
+            free(word);
+            
+            if (buffer[c]=='\0') {
+                return 1;
+            }
+        }
+
+        char tempSpaces[512];
+        while ((buffer[c] == '\n' || buffer[c] == ' ' || buffer[c] == '\t') && buffer[c] != '\0') {
+            tempSpaces[nbDelimiteur++]=buffer[c++];
+
+        }
+        tempSpaces[nbDelimiteur]='\0';
+        if (nbDelimiteur > 0) {
+            int type = SHORT_SPACE;
+            if (nbDelimiteur > 4) type=SPACE;
+            
+            token * tk = creation_token(type, c-nbDelimiteur, tempSpaces);
+            addTokken(txt, tk);
         }
 
         if (buffer[c]=='\0') {
-            return 0;
+                return 1;
         }
-    
-        tableAppendWord(tableHash, word);
-        creation_token(1, c-wordC, word);
-
-        char * spaces = malloc(sizeof(char));
-        spaces[nbDelimiteur++]=buffer[c];
-        while ((buffer[c] == '\n' && buffer[c]==' ' && buffer[c]== '\t')  && c != '\0') {
-            spaces[nbDelimiteur++]=buffer[c++];
-
-        }
-        spaces[nbDelimiteur]='\0';
-        int type = SHORT_SPACE;
-        if (nbDelimiteur > 4) type=SPACE;
-        
-        creation_token(type, c-nbDelimiteur-1, spaces);
     }
-    return 1;
+    return 0;
 }
 
 
@@ -102,7 +124,6 @@ int addTokken(texte * t, token * tk) {
 }
 
 
-// A revoir plus tard
 char * charger_fichier(const char * nomFichier) {
     FILE * f = fopen(nomFichier, "r");
     if (f == NULL) return NULL; // Échec d'ouverture 🛡️
@@ -125,4 +146,16 @@ char * charger_fichier(const char * nomFichier) {
 
     fclose(f);
     return buffer;
+}
+
+void liberer_texte(texte * t) {
+    if (t == NULL) return NULL;
+
+    int i = 0;
+    while(i < t->cptJetons) {
+        free(t->jetons[i]);
+        i++;
+    }
+    free(t->jetons);
+    free(t);
 }

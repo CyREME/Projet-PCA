@@ -1,12 +1,11 @@
 /* -------------------------------------------------------------------
    LACROIX & CELLIER
    -------------------------------------------------------------------
-   Test unitaire du module de table de hashage - Fonctions utilitaires
+   Module de gestion et d'analyse des textes - Fichier d'en-tête
    -------------------------------------------------------------------
    10/11/26 SR creation
    -------------------------------------------------------------------
 */
-
 
 #ifndef TEXTE_H
 #define TEXTE_H
@@ -43,16 +42,22 @@ typedef struct {
 
 
 
-// creation token
+// Création d'un jeton
 token * creation_token(int type, int textOffset, char * str);
 
-// Ajout data token
+// Création d'une structure texte vide
+texte * creation_texte();
 
+// Analyse du buffer pour découper en jetons
+int textToToken(table_hash * tableHash, texte * txt, char * buffer);
 
+// Ajout d'un jeton dans le tableau dynamique du texte
+int addTokken(texte * t, token * tk);
 
+// Chargement d'un fichier complet dans une chaîne char *
+char * charger_fichier(const char * nomFichier);
 
-// creation token
-
-
+// Libération complète de la mémoire d'un texte et de ses jetons
+void liberer_texte(texte * t);
 
 #endif
