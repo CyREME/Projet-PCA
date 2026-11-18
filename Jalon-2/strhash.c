@@ -1,7 +1,7 @@
-#include "strhash.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "strhash.h"
 
 /*Creation d'une table*/
 table_hash * createTableHash(int size){
@@ -129,7 +129,7 @@ void minMaxTotElNode(table_hash * tab, int * min, int * max, int * tot) {
     *(tot) = sizeAdresses;
     
     for (int i=1; i < tab->size; i++) {
-        int sizeAdresses=nbElAdresses(tab->adresses[i]);
+        sizeAdresses=nbElAdresses(tab->adresses[i]);
         if (sizeAdresses<*(min)) {
             *(min)=sizeAdresses;
         }

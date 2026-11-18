@@ -1,4 +1,5 @@
-#include "texte.h";
+#include <stdlib.h>
+#include "texte.h"
 
 
 // creation token
@@ -149,7 +150,7 @@ char * charger_fichier(const char * nomFichier) {
 }
 
 void liberer_texte(texte * t) {
-    if (t == NULL) return NULL;
+    if (t == NULL) return;
 
     int i = 0;
     while(i < t->cptJetons) {
