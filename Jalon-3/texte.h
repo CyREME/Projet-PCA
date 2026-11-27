@@ -60,5 +60,4 @@ char * charger_fichier(const char * nomFichier);
 
 // Libération complète de la mémoire d'un texte et de ses jetons
 void liberer_texte(texte * t);
-
 #endif
