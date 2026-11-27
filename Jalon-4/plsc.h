@@ -4,6 +4,6 @@
 #include "texte.h"
 
 texte * plsc(texte * textA, texte * textB);
-// int valMin(int M[texteA->cptJetons+1][texteB->cptJetons+1]);
+void reverse_array(token ** tab, int size);
 
 #endif

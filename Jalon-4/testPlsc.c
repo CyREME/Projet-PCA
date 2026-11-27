@@ -1,54 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "strhash.h"
-#include "texte.h"
+#include <string.h>
+#include <assert.h>
 #include "plsc.h"
 
-// Fonction d'affichage de la matrice M
-void afficher_matrice(int ** M, int nbrA, int nbrB) {
-    printf("\n--- Matrice PLSC M [%d x %d] ---\n", nbrA + 1, nbrB + 1);
-    for (int i = 0; i <= nbrA; i++) {
-        for (int j = 0; j <= nbrB; j++) {
-            printf("%2d ", M[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
+int main() {
+    // 1. Initialisation de la table de hachage global/strhash si besoin
+    table_hash * th = createTableHash(100);
 
-int main(int argc, char * argv[]) {
-    // 1. Définition de deux fichiers de test ou création de textes simples
-    if (argc < 3) {
-        printf("Usage: %s <fichier_ref> <fichier_nouveau>\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-
-    // 2. Création de la table de hachage partagée
-    table_hash * ht = createTableHash(100);
-
-    // 3. Chargement des deux textes
-    char * texteA = charger_fichier("Hier_Encore.txt");
-    texte * textA = creation_texte();
-    textToToken(ht, textA, texteA);
-
+    // 2. Chargement des deux textes à comparer
+    texte * texteA = creation_texte();
+    textToToken(th, texteA, charger_fichier("Hier_Encore.txt"));
     
-    char * texteB = charger_fichier("Hier_Encore.txt");
-    texte * textB = creation_texte();
-    textToToken(ht, textB, texteB);
+    texte * texteB = creation_texte();
+    textToToken(th, texteB, charger_fichier("Hier_Encore_2.txt"));
 
-    if (!textA || !textB) {
-        fprintf(stderr, "Erreur lors du chargement des fichiers.\n");
-        return EXIT_FAILURE;
-    }
+    assert(texteA != NULL);
+    assert(texteB != NULL);
 
-    // 4. Exécution du calcul de la PLSC et récupération du résultat
-    printf("Text A : %d jetons\n", textA->cptJetons);
-    printf("Text B : %d jetons\n", textB->cptJetons);
+    // 3. Calcul de l'alignement PLSC
+    texte * texteC = plsc(texteA, texteB);
+    assert(texteC != NULL);
 
-   texte * textAligned = plsc(textA, textB);
+    // 5. Assertions globales
 
-    // 5. Libération de la mémoire
-    // (Pense à libérer textA, textB, textAligned et la table ht)
 
-    return EXIT_SUCCESS;
+    // "Hier" remplacer par "Aujourd'hui"
+    assert(strcmp(texteC->jetons[1]->data.word, "Aujourd'hui") == 0);
+    assert(texteC->jetons[1]->type == 5);
+    
+    // "encore" insérer
+    assert(strcmp(texteC->jetons[7]->data.word, "encore") == 0);
+    assert(texteC->jetons[7]->type == 4);  // Insertion de "encore"
+    
+    // "encore" supprimer
+    assert(strcmp(texteC->jetons[256]->data.word, "encore") == 0);
+    assert(texteC->jetons[256]->type == 3);   // Suppression de "encore"
+
+    // un espace
+    assert(texteC->jetons[8]->data.space[0]== ' ');
+    assert(texteC->jetons[8]->type == 1);   // Suppression de "encore"
+
+    return 0;
 }
